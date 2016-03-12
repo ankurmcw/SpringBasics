@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	default-init-method="initMethod" default-destroy-method="cleanUp">
+
+	<!-- <bean id="triangle" class="com.ankur.springbasics.impl.Triangle" autowire="byName">		
+	</bean> -->
+	
+	<!-- bean inheritance -->
+	<bean id="parentTriangle" class="com.ankur.springbasics.impl.Triangle" abstract="true">
+		<property name="pointA" ref="pointA" />		
+	</bean>
+	
+	<bean id="triangle" class="com.ankur.springbasics.impl.Triangle" scope="singleton" parent="parentTriangle" init-method="initMethod" destroy-method="cleanUp">
+		<property name="pointB" ref="pointB" />
+		<property name="pointC" ref="pointC" />
+	</bean>
+	
+	<bean id="rhombus" class="com.ankur.springbasics.impl.Rhombus" scope="prototype">
+		<property name="points">
+			<list>
+				<ref bean="pointA" />
+				<ref bean="pointB" />
+				<ref bean="pointC" />
+				<ref bean="pointC" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- <bean id="square" class="com.ankur.springbasics.impl.Square" autowire="constructor" >		
+	</bean> -->
+	
+	<bean id="square" class="com.ankur.springbasics.impl.Square">
+		<constructor-arg index="0" ref="pointA"/>
+		<constructor-arg index="1" ref="pointB"/>
+		<constructor-arg index="2" ref="pointC"/>
+		<constructor-arg index="3" ref="pointD"/>
+	</bean>
+	
+	
+	<!-- <bean id="square" class="com.ankur.springbasics.impl.Square">
+		<property name="pointA" ref="pointA" />
+		<property name="pointB" ref="pointB" />
+		<property name="pointC" ref="pointC" />
+		<property name="pointD">
+			Inner Beans
+			<bean class="com.ankur.springbasics.impl.Point">
+				<property name="x" value="40" />
+				<property name="y" value="40" />		
+			</bean>
+		</property>
+	</bean> -->
+	
+	<bean id="pointA" class="com.ankur.springbasics.impl.Point">
+		<property name="x" value="${pointA.pointX}" />
+		<property name="y" value="${pointA.pointY}" />		
+	</bean>
+	
+	<bean id="pointB" class="com.ankur.springbasics.impl.Point">
+		<property name="x" value="${pointB.pointX}" />
+		<property name="y" value="${pointB.pointY}" />		
+	</bean>
+	
+	<bean id="pointC" class="com.ankur.springbasics.impl.Point">
+		<property name="x" value="${pointC.pointX}" />
+		<property name="y" value="${pointC.pointY}" />		
+	</bean>
+	
+	<bean id="pointD" class="com.ankur.springbasics.impl.Point">
+		<property name="x" value="${pointD.pointX}" />
+		<property name="y" value="${pointD.pointY}" />		
+	</bean>
+	
+	<alias name="triangle" alias="triangle-alias"/>
+	<alias name="square" alias="square-alias"/>
+	
+	<bean class="com.ankur.springbasics.impl.BeanNamePostProcessor"/>
+	
+	<bean class="com.ankur.springbasics.impl.MyFactoryPostProcessor"/>
+	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath:pointConfig.properties"/>
+	</bean>
+	
+	<bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/>
+</beans>
